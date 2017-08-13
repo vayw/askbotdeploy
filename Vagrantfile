@@ -12,4 +12,8 @@ Vagrant.configure("2") do |config|
         puppet.manifests_path = ["vm", "/vagrant/puppet/"] 
         puppet.manifest_file  = "manifests"
     end
+
+    config.vm.provision "ansible" do |ansible|
+        ansible.playbook = "emptyplaybook.yml"
+    end
 end
