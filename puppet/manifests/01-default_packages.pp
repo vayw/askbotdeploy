@@ -7,6 +7,16 @@ package {'python34':
     require => Package['epel-release'],
 }
 
+package {'python2-pip':
+    ensure => installed,
+    require => Package['epel-release'],
+}
+
+package {'python-virtualenv':
+    ensure => installed,
+    require => Package['epel-release'],
+}
+
 file { 'environment':
     path => "/etc/environment",
     source => "/vagrant/puppet/files/environment",
