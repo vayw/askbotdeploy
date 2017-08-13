@@ -2,7 +2,7 @@ Vagrant.configure("2") do |config|
     config.vm.box = "centos/7"
 
     $puppet_install = "
-        sudo rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-el-7.noarch.rpm
+        sudo rpm -ivh /vagrant/files/puppetlabs-release-el-7.noarch.rpm
         sudo yum -y install puppet
     "
 
