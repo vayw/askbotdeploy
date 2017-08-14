@@ -1,0 +1,14 @@
+server {
+    listen 80 default;
+    server_name {{ askbot_domain }};
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location /m/ {
+        root {{ appdir }};
+    }
+
+    location / {
+        include         uwsgi_params;
+        uwsgi_pass      {{ askbot_uwsgi_socket }};
+    }
+}

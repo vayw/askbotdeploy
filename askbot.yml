@@ -1,0 +1,5 @@
+---
+- hosts: all
+  name: Deploy askbot and all dependencies into a single host
+  roles:
+    - { role: askbot, app_user: askbot }

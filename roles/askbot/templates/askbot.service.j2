@@ -1,0 +1,12 @@
+[Unit]
+Description=askbot daemon
+After=network.target
+
+[Service]
+User={{ askbot_user }}
+Group={{ askbot_user }}
+WorkingDirectory={{ appdir }}
+ExecStart={{ virtenv }}/bin/uwsgi --ini /home/{{ askbot_user }}/uwsgi.ini
+
+[Install]
+WantedBy=multi-user.target

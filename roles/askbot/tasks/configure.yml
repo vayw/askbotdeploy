@@ -1,0 +1,39 @@
+---
+- name: configure askbot and uwsgi
+  template: >
+    src={{ item }}.j2
+    dest={{ askbot_conf_dir }}/{{ item }}
+    owner={{ askbot_user }}
+    group={{ askbot_group }}
+  with_items:
+    - settings.py
+    - uwsgi.ini
+  become_user: root
+  become: yes
+  become_method: sudo
+
+- name: copy manage.py
+  copy: >
+    src=manage.py
+    dest={{ askbot_base_dir }}/manage.py
+    owner={{ askbot_user }}
+    group={{ askbot_group }}
+    mode=0644
+  become_user: root
+  become: yes
+  become_method: sudo
+
+- name: copy urls.py and wsgi.py
+  copy: >
+    src={{ item }}
+    dest={{ askbot_conf_dir }}/{{ item }}
+    owner={{ askbot_user }}
+    group={{ askbot_group }}
+    mode=0644
+  with_items:
+    - urls.py
+    - wsgi.py
+    - __init__.py
+  become_user: root
+  become: yes
+  become_method: sudo

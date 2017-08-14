@@ -1,0 +1,19 @@
+---
+- name: run script to handel db things
+  script: roles/askbot/files/database_prepare.sh {{ askbot_db_name }} {{ askbot_user }} {{ askbot_db_pass }}
+  become_user: root 
+  become: yes
+  become_method: sudo
+
+#- name: Create a new database with name 'askbot'
+#  command: mysql -e "create database {{ app_db }} DEFAULT CHARACTER SET UTF8 COLLATE utf8_general_ci;"
+#  become_user: root
+#  become: yes
+#  become_method: sudo
+#
+#- name: add user
+#  command: mysql -e "grant all privileges on {{ app_db }}.* to {{ app_user }}@localhost identified by '{{ db_passwd }}'"
+#  become_user: root 
+#  become: yes
+#  become_method: sudo
+

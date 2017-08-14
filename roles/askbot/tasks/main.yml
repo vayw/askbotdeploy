@@ -1,0 +1,94 @@
+---
+- include: askbotdeps.yml
+- include: db.yml
+
+# Disable SELinux
+- selinux:
+    state: disabled
+  become_user: root
+  become: yes
+  become_method: sudo
+
+- name: set app dir permissions
+  file:
+    path: "/home/{{ askbot_user }}"
+    owner: "{{ askbot_user }}" 
+    group: "{{ askbot_user }}" 
+    mode: 0755
+  become_user: root
+  become: yes
+  become_method: sudo
+
+- name: download askbot source
+  git:
+    repo: "{{ git_url }}"
+    dest: "{{ gitdir }}"
+  become_user: "{{ askbot_user }}"
+  become: yes
+  become_method: sudo
+
+- name: prepare virtualenv
+  pip:
+    requirements: "{{ gitdir }}/askbot_requirements.txt"
+    virtualenv: "{{ virtenv }}"
+  become_user: "{{ askbot_user }}"
+  become: yes
+  become_method: sudo
+
+- name: install mysql-python
+  pip:
+    name: mysql-python
+    virtualenv: "{{ virtenv }}"
+  become_user: "{{ askbot_user }}"
+  become: yes
+  become_method: sudo
+
+- name: install uwsgi
+  pip:
+    name: uwsgi
+    virtualenv: "{{ virtenv }}"
+  become_user: "{{ askbot_user }}"
+  become: yes
+  become_method: sudo
+
+- name: install askbot
+  command: "{{ virtenv }}/bin/python setup.py install"
+  args:
+    chdir: "{{ gitdir }}"
+  become_user: "{{ askbot_user }}"
+  become: yes
+  become_method: sudo
+
+- name: deploy askbot application
+  script: roles/askbot/files/deploy_askbot.sh {{ askbot_db_name }} {{ askbot_db_user }} {{ askbot_db_pass }} {{ virtenv }} {{ appdir }}
+  become_user: "{{ askbot_user }}"
+  become: yes
+  become_method: sudo
+
+- name: install trivial nginx config
+  template: src=nginx.j2 dest=/etc/nginx/nginx.conf
+  become_user: root
+  become: yes
+  become_method: sudo
+
+- name: install trivial vhost config
+  template: src=nginx.askbot.j2 dest=/etc/nginx/conf.d/askbot.conf
+  become_user: root
+  become: yes
+  become_method: sudo
+
+- name: install uwsgi config
+  template: src=uwsgi.ini.j2 dest=/home/{{ askbot_user }}/uwsgi.ini
+  become_user: "{{ askbot_user }}"
+  become: yes
+  become_method: sudo
+
+- name: reload nginx
+  service:
+    name: nginx
+    state: restarted
+  become_user: root
+  become: yes
+  become_method: sudo
+
+- include: systemd.yml

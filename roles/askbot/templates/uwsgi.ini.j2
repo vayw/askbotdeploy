@@ -1,0 +1,11 @@
+# {{ ansible_managed }}
+
+[uwsgi]
+project = {{ askbot_name }}
+base = /home/{{ askbot_user }}
+chdir = %(base)
+home = {{ virtenv }}
+module = {{ askbot_name }}.wsgi
+master = true
+processes = 3
+socket = {{ askbot_uwsgi_socket }} 
