@@ -4,6 +4,9 @@ package {'mariadb-server':
 package {'mariadb-libs':
     ensure => installed,
 }
+package {'mariadb-devel':
+    ensure => installed,
+}
 
 service { 'mariadb':
     ensure => running,
