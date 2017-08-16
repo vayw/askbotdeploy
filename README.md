@@ -1,6 +1,8 @@
 # askbot test deploy
 USAGE:
+
 vagrant up
+
 ansible-playbook askbot.yml 
 
 and then open
